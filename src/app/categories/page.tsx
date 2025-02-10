@@ -8,6 +8,7 @@ import { Search } from 'lucide-react';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { Category } from '@/types';
+import LoadingSpinner from '@/components/LodaingSpinner';
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -67,7 +68,7 @@ export default function CategoriesPage() {
       {/* Categories Grid */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         {loading ? (
-          <div className="text-center">Loading...</div>
+          <LoadingSpinner/>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredCategories.map((category) => (

@@ -9,6 +9,7 @@ import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/config/firebase';
 import { Machine } from '@/types';
 import { Search, Settings, Clock } from 'lucide-react';
+import LoadingSpinner from '@/components/LodaingSpinner';
 
 export default function CategoryMachinesPage() {
   const params = useParams();
@@ -69,21 +70,22 @@ export default function CategoryMachinesPage() {
       {/* Machines Grid */}
       <div className="max-w-6xl mx-auto px-4 py-16">
         {loading ? (
-          <div className="text-center">Loading...</div>
+          <LoadingSpinner />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredMachines.map((machine) => (
               <Link 
                 href={`/categories/${categoryId}/${machine.id}`} 
                 key={machine.id}
+                className="group"
               >
-                <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300">
+                <div className="bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-300 group-hover:shadow-xl group-hover:translate-y-[-4px]">
                   <div className="relative h-64">
                     <Image
                       src={machine.machineImg}
                       alt={machine.id}
                       fill
-                      className="object-cover"
+                      className="object-cover transition-transform duration-300 group-hover:scale-105"
                     />
                     {machine.youtube && (
                       <div className="absolute bottom-4 right-4 bg-red-500 text-white px-3 py-1 rounded-full text-sm">
@@ -92,7 +94,7 @@ export default function CategoryMachinesPage() {
                     )}
                   </div>
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold mb-4">{machine.id}</h3>
+                    <h3 className="text-xl font-semibold mb-4 group-hover:text-blue-500 transition-colors">{machine.id}</h3>
                     {machine.details && (
                       <div className="flex items-center gap-4 text-gray-600 mb-4">
                         <div className="flex items-center gap-2">
@@ -109,13 +111,16 @@ export default function CategoryMachinesPage() {
                         </div>
                       </div>
                     )}
-                   <div >
-                    {/* <h3 className="text-xl font-semibold mb-2">{category.id}</h3> */}
-                    <div className="flex items-center text-blue-500">
-                      <span>{machine.price+' Rs.' || 'price on request'}</span>
-                      <span className="group-hover:translate-x-2 transition-transform">→</span>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-blue-500">
+                        {machine.price ? (
+                          <span className="font-medium">{machine.price + ' Rs.'}</span>
+                        ) : (
+                          <span className="text-blue-500 font-medium">Get Price Quote</span>
+                        )}
+                        <span className="ml-2 transform transition-transform group-hover:translate-x-2">→</span>
+                      </div>
                     </div>
-                  </div>
                   </div>
                 </div>
               </Link>

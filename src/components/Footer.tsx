@@ -1,30 +1,46 @@
-// components/Footer.tsx
-import Image from 'next/image'
-import Link from 'next/link'
-import { Phone, Mail, MessageSquare } from 'lucide-react'
+'use client';
 
-interface FooterSection {
-  title: string
-  links: string[]
-}
-
-const footerSections: FooterSection[] = [
-  {
-    title: 'Sitemap',
-    links: ['Home', 'Categories', 'Contact Us']
-  },
-  {
-    title: 'Categories',
-    links: [
-      'Papad Making Machines',
-      'Chapati Making Machines',
-      'Snacks Making Machines',
-      'Dough Ball Cutting Machines'
-    ]
-  }
-]
+import Image from 'next/image';
+import Link from 'next/link';
+import { Phone, MessageCircle } from 'lucide-react';
+import { collection, getDocs, limit, query } from 'firebase/firestore';
+import { db } from '@/config/firebase';
+import { useEffect, useState } from 'react';
+import { Category } from '@/types';
 
 export default function Footer() {
+  const [categories, setCategories] = useState<Category[]>([]);
+  const phoneNumber = "9552269238";
+
+  const handleCall = () => {
+    window.location.href = `tel:+91${phoneNumber}`;
+  };
+
+  const handleWhatsApp = () => {
+    const message = "Hi, I'm interested in your food processing machines.";
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/91${phoneNumber}?text=${encodedMessage}`, '_blank');
+  };
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categoriesRef = collection(db, 'categories');
+        const q = query(categoriesRef, limit(5));
+        const snapshot = await getDocs(q);
+        const categoriesData = snapshot.docs.map(doc => ({
+          id: doc.id,
+          ...doc.data()
+        })) as Category[];
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   return (
     <footer className="bg-gray-900 text-white">
       <div className="max-w-7xl mx-auto px-4 py-12">
@@ -47,19 +63,35 @@ export default function Footer() {
             </p>
           </div>
 
-          {/* Sitemap and Categories */}
-          {footerSections.map((section) => (
-            <div key={section.title}>
-              <h3 className="font-bold mb-4">{section.title}</h3>
-              <ul className="space-y-2 text-gray-400">
-                {section.links.map((link) => (
-                  <li key={link} className="hover:text-gray-300 cursor-pointer">
-                    {link}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+          {/* Sitemap */}
+          <div>
+            <h3 className="font-bold mb-4">Sitemap</h3>
+            <ul className="space-y-2 text-gray-400">
+              <li>
+                <Link href="/" className="hover:text-gray-300">Home</Link>
+              </li>
+              <li>
+                <Link href="/categories" className="hover:text-gray-300">Categories</Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-gray-300">Contact Us</Link>
+              </li>
+            </ul>
+          </div>
+
+          {/* Categories */}
+          <div>
+            <h3 className="font-bold mb-4">Categories</h3>
+            <ul className="space-y-2 text-gray-400">
+              {categories.map((category) => (
+                <li key={category.id}>
+                  <Link href={`/categories/${category.id}`} className="hover:text-gray-300">
+                    {category.id}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {/* Contact Section with Map */}
           <div className="space-y-4">
@@ -75,24 +107,25 @@ export default function Footer() {
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
-                // className="grayscale"
               ></iframe>
-
-
-
             </div>
 
-            {/* Contact Icons */}
-            <div className="flex space-x-4 mt-4">
-              <Link href="tel:+919999999999" className="hover:text-blue-500 transition-colors" title="Call Us">
-                <Phone className="w-6 h-6" />
-              </Link>
-              <Link href="mailto:contact@asengineering.com" className="hover:text-blue-500 transition-colors" title="Email Us">
-                <Mail className="w-6 h-6" />
-              </Link>
-              <Link href="/contact#message" className="hover:text-blue-500 transition-colors" title="Send Message">
-                <MessageSquare className="w-6 h-6" />
-              </Link>
+            {/* Contact Buttons */}
+            <div className="flex gap-4 mt-4">
+              <button
+                onClick={handleWhatsApp}
+                className="flex-1 flex items-center justify-center gap-2 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg transition-colors"
+              >
+                <MessageCircle className="w-5 h-5" />
+                WhatsApp
+              </button>
+              <button
+                onClick={handleCall}
+                className="flex-1 flex items-center justify-center gap-2 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-colors"
+              >
+                <Phone className="w-5 h-5" />
+                Call
+              </button>
             </div>
           </div>
         </div>
@@ -103,5 +136,5 @@ export default function Footer() {
         </div>
       </div>
     </footer>
-  )
+  );
 }
