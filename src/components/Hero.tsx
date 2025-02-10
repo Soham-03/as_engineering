@@ -94,9 +94,10 @@ export default function Hero() {
            </Link>
          </motion.div>
 
+         {/* Responsive Cards Section */}
          <motion.div 
            variants={itemVariants}
-           className="grid grid-cols-3 gap-6 pt-8 border-t"
+           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 pt-8 border-t"
          >
            <div className="group">
              <div className="bg-blue-50/80 p-6 rounded-xl transition-all duration-300 group-hover:bg-blue-100/80 group-hover:shadow-lg group-hover:-translate-y-1">

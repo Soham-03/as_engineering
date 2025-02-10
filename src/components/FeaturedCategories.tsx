@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -19,7 +19,7 @@ export default function FeaturedCategories() {
         const snapshot = await getDocs(q);
         const categoriesData = snapshot.docs.map(doc => ({
           id: doc.id,
-          ...doc.data()
+          ...doc.data(),
         })) as Category[];
         setCategories(categoriesData);
       } catch (error) {
@@ -45,9 +45,9 @@ export default function FeaturedCategories() {
                 tailored for commercial kitchens and food production facilities.
               </p>
             </div>
-            
-            <Link 
-              href="/categories" 
+
+            <Link
+              href="/categories"
               className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:text-blue-700 group"
             >
               VIEW ALL CATEGORIES
@@ -72,15 +72,15 @@ export default function FeaturedCategories() {
             {loading ? (
               <div className="text-center py-8">Loading...</div>
             ) : (
-              <div className="grid gap-6">
+              <div className="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {categories.map((category) => (
-                  <Link 
+                  <Link
                     href={`/categories/${category.id}`}
-                    key={category.id} 
+                    key={category.id}
                     className="group hover:bg-blue-50 p-4 rounded-xl transition-colors"
                   >
-                    <div className="flex gap-6 items-center">
-                      <div className="relative w-40 h-40 flex-shrink-0">
+                    <div className="flex flex-col sm:gap-4">
+                      <div className="relative w-full h-40 sm:h-60 md:h-40">
                         <Image
                           src={category.categoryImg}
                           alt={category.id}
