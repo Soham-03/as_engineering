@@ -1,16 +1,15 @@
-// app/lib/firebase.ts
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyBjmJz1mEIb43YdjACvdt5DbzbcvZWbmOY",
-  authDomain: "music-app-8423a.firebaseapp.com",
-  databaseURL: "https://music-app-8423a.firebaseio.com",
-  projectId: "music-app-8423a",
-  storageBucket: "music-app-8423a.appspot.com",
-  messagingSenderId: "826869174710",
-  appId: "1:826869174710:web:dabc2264d7aec500ebb117",
-  measurementId: "G-M1M1186L4D"
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL,
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);
