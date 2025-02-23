@@ -9,7 +9,7 @@ const LoadingSpinner = () => {
         {/* Inner spinning ring */}
         <div className="absolute top-0 left-0 w-16 h-16 border-4 border-blue-500 rounded-full border-t-transparent animate-spin"></div>
       </div>
-      <p className="mt-4 text-lg text-blue-500 font-medium">Loading categories...</p>
+      <p className="mt-4 text-lg text-blue-500 font-medium">Loading ...</p>
     </div>
   );
 };

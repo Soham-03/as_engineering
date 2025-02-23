@@ -50,7 +50,7 @@ export default function Hero() {
            className="inline-block px-4 py-2 bg-blue-100 rounded-full"
          >
            <span className="text-blue-600 font-medium">
-             Trusted by 500+ Businesses
+             Trusted by 1 Lakh+ Businesses
            </span>
          </motion.div>
          
@@ -58,12 +58,12 @@ export default function Hero() {
            variants={itemVariants}
            className="text-5xl md:text-6xl font-bold leading-tight"
          >
-           For All Your{' '}
+           {/* A. S.{''} */}
            <span className="text-blue-600 relative">
-             Food Processing
+             
              <div className="absolute -z-10 inset-0 bg-blue-100/50 blur-xl"></div>
            </span>{' '}
-           Machine Needs
+           A. S.{' '} Engineering Works
          </motion.h1>
          
          <motion.p 
@@ -107,7 +107,7 @@ export default function Hero() {
            </div>
            <div className="group">
              <div className="bg-blue-50/80 p-6 rounded-xl transition-all duration-300 group-hover:bg-blue-100/80 group-hover:shadow-lg group-hover:-translate-y-1">
-               <div className="text-2xl font-bold text-blue-600">500+</div>
+               <div className="text-2xl font-bold text-blue-600">1 Lakh+</div>
                <div className="text-gray-600">Customers</div>
              </div>
            </div>
