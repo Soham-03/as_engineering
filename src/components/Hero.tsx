@@ -70,7 +70,7 @@ export default function Hero() {
            variants={itemVariants}
            className="text-gray-600 text-lg md:text-xl"
          >
-           Specializing in high-quality Papad Making Machines, Chapati Making
+           Specializing in high-quality Papad Making Machines, Roti Making
            Machines, and Snacks Making Equipment. Built for efficient commercial
            production with customizable options.
          </motion.p>
