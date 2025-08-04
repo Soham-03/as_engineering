@@ -17,7 +17,7 @@ const tanNimbus = localFont({
 export const metadata: Metadata = {
   title: 'A.S. Engineering Works',
   description: 'Leading manufacturer of food processing machines',
-  keywords: 'food processing, machines, manufacturing, engineering, as engineering works, papad making machine, bakery machine, chapati machine, roti machine',
+  keywords: 'food processing, machines, manufacturing, engineering, as engineering works, papad making machine, bakery machine, chapati machine, roti machine, bhakri making machine, bhakri, a s engineering works, papad making machine, rice bhakri making machine, jowar bhakri making machine, chapati making machine, rice roti making machine',
 }
 
 export default function RootLayout({
