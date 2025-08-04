@@ -83,9 +83,9 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-2">Address</h3>
                   <p className="text-gray-600">
-                    Runda Road, Tirupati Balaji Nagar<br />
-                    Titwala east, Kalyan- 421605<br />
-                    Maharashtra, India
+                    76RR+6G, near Gail India,<br />
+                    Mhaskal,<br />
+                    Maharashtra 421605
                   </p>
                 </div>
               </div>
@@ -103,8 +103,9 @@ export default function ContactPage() {
           </div>
 
           <div className="h-[400px] rounded-xl overflow-hidden shadow-lg">
+
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d7531.265242652624!2d73.2053736935791!3d19.29833610000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be7957cc132958f%3A0x3b582de901431a17!2sA.%20S.%20ENGINEERING%20WORKS!5e0!3m2!1sen!2sin!4v1738502507827!5m2!1sen!2sin"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d120505.99217326289!2d73.15893228594959!3d19.290529023867922!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3be79100564033d1%3A0x49508e0b7fb1bea0!2sA%20S%20Machinery!5e0!3m2!1sen!2sin!4v1754281027714!5m2!1sen!2sin"
               width="100%"
               height="100%"
               style={{ border: 0 }}
