@@ -8,7 +8,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'firebasestorage.googleapis.com',
         pathname: '/**', // Allow all paths under this hostname
-      },
+      },{
+        protocol: 'https',
+        hostname: '**',
+        pathname: '/**', // Allow all paths under this hostname
+      }
     ],
   },
 }
