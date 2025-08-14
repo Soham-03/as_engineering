@@ -8,6 +8,50 @@ from PIL import Image
 import io
 
 
+def load_json_from_url(url):
+    """Load JSON from direct URL"""
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return json.loads(response.text)
+        else:
+            st.error(f"Failed to load JSON from {url}: {response.status_code}")
+            return None
+    except Exception as e:
+        st.error(f"Error loading JSON from {url}: {e}")
+        return None
+
+
+def load_firebase_configs_from_urls():
+    """Load both Firebase configs from direct URLs"""
+    # Your direct URLs
+    old_json_url = "https://asengineeringworks.in/old.json"
+    new_json_url = "https://asengineeringworks.in/new.json"
+    
+    st.info("🔄 Loading Firebase configurations from server...")
+    
+    # Load both JSON files
+    old_data = load_json_from_url(old_json_url)
+    new_data = load_json_from_url(new_json_url)
+    
+    if old_data and new_data:
+        try:
+            old_config = {
+                'project_id': old_data['project_info']['project_id'],
+                'api_key': old_data['client'][0]['api_key'][0]['current_key']
+            }
+            new_config = {
+                'project_id': new_data['project_info']['project_id'],
+                'api_key': new_data['client'][0]['api_key'][0]['current_key']
+            }
+            return old_config, new_config
+        except KeyError as e:
+            st.error(f"Error parsing JSON configuration: {e}")
+            return None, None
+    
+    return None, None
+
+
 class FirebaseDebugger:
     def __init__(self, project_id, api_key):
         self.project_id = project_id
@@ -346,19 +390,6 @@ class FirebaseDebugger:
             return False
 
 
-def load_firebase_config(config_file_content):
-    """Load Firebase configuration from JSON content"""
-    try:
-        data = json.loads(config_file_content)
-        return {
-            'project_id': data['project_info']['project_id'],
-            'api_key': data['client'][0]['api_key'][0]['current_key']
-        }
-    except Exception as e:
-        st.error(f"Error loading config: {e}")
-        return None
-
-
 def image_to_base64(image_file):
     """Convert uploaded image to base64 string"""
     try:
@@ -618,7 +649,7 @@ def show_edit_machine_page(old_db, new_db):
                     except:
                         st.write("❌ Current main image: [Cannot display - corrupted data]")
                 elif current_main_img:
-                    st.write(f"📎 Main image URL: {current_main_img[:50]}...")
+                    st.write(f"📎 Main image URL: {current_main_img}")
                     st.info("💡 This appears to be a URL. Upload a new image to replace it.")
                 else:
                     st.info("ℹ️ No main image currently set")
@@ -1149,137 +1180,93 @@ def main():
     st.title("🔥 Firebase Machine Management Tool")
     st.markdown("Complete CRUD operations for your Firebase machine database!")
     
-    # Upload JSON files
-    st.header("📁 Upload Configuration Files")
+    # Load configurations from URLs automatically
+    st.header("🔗 Firebase Configuration")
     
-    col1, col2 = st.columns(2)
+    with st.spinner("Loading Firebase configurations..."):
+        old_config, new_config = load_firebase_configs_from_urls()
     
-    with col1:
-        st.subheader("Old Database")
-        old_json = st.file_uploader("Upload OLD google-services.json", type=['json'], key="old_json")
-    
-    with col2:
-        st.subheader("New Database")
-        new_json = st.file_uploader("Upload NEW google-services.json", type=['json'], key="new_json")
-    
-    if old_json and new_json:
-        # Load configurations
-        old_config = load_firebase_config(old_json.read().decode())
-        new_config = load_firebase_config(new_json.read().decode())
+    if old_config and new_config:
+        st.success("✅ Firebase configurations loaded successfully!")
         
-        if old_config and new_config:
-            st.success("✅ Both configurations loaded successfully!")
-            
-            # Show project info
+        # Show project info
+        col1, col2 = st.columns(2)
+        with col1:
+            st.info(f"**Old Database:** {old_config['project_id']}")
+        with col2:
+            st.info(f"**New Database:** {new_config['project_id']}")
+        
+        # Initialize debuggers
+        old_db = FirebaseDebugger(old_config['project_id'], old_config['api_key'])
+        new_db = FirebaseDebugger(new_config['project_id'], new_config['api_key'])
+        
+        st.markdown("---")
+        
+        # Navigation
+        st.header("🧭 Navigation")
+        tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+            "🔗 Connection Test", 
+            "➕ Add Category", 
+            "🔧 Add Machine", 
+            "✏️ Edit Machine", 
+            "🗑️ Delete Machine", 
+            "🔄 Sync Databases"
+        ])
+        
+        with tab1:
+            st.subheader("🔗 Connection Test")
             col1, col2 = st.columns(2)
+            
             with col1:
-                st.info(f"**Old Database:** {old_config['project_id']}")
+                if st.button("Test Old Database Connection"):
+                    try:
+                        categories = old_db.get_categories()
+                        if categories:
+                            st.success(f"✅ Connected! Found {len(categories)} categories")
+                            for cat_id, cat_data in categories.items():
+                                st.write(f"• {cat_data.get('categoryName', cat_id)}")
+                        else:
+                            st.warning("Connected but no categories found")
+                    except Exception as e:
+                        st.error(f"❌ Connection failed: {e}")
+            
             with col2:
-                st.info(f"**New Database:** {new_config['project_id']}")
-            
-            # Initialize debuggers
-            old_db = FirebaseDebugger(old_config['project_id'], old_config['api_key'])
-            new_db = FirebaseDebugger(new_config['project_id'], new_config['api_key'])
-            
-            st.markdown("---")
-            
-            # Navigation
-            st.header("🧭 Navigation")
-            tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
-                "🔗 Connection Test", 
-                "➕ Add Category", 
-                "🔧 Add Machine", 
-                "✏️ Edit Machine", 
-                "🗑️ Delete Machine", 
-                "🔄 Sync Databases"
-            ])
-            
-            with tab1:
-                st.subheader("🔗 Connection Test")
-                col1, col2 = st.columns(2)
-                
-                with col1:
-                    if st.button("Test Old Database Connection"):
-                        try:
-                            categories = old_db.get_categories()
-                            if categories:
-                                st.success(f"✅ Connected! Found {len(categories)} categories")
-                                for cat_id, cat_data in categories.items():
-                                    st.write(f"• {cat_data.get('categoryName', cat_id)}")
-                            else:
-                                st.warning("Connected but no categories found")
-                        except Exception as e:
-                            st.error(f"❌ Connection failed: {e}")
-                
-                with col2:
-                    if st.button("Test New Database Connection"):
-                        try:
-                            categories = new_db.get_categories()
-                            if categories:
-                                st.success(f"✅ Connected! Found {len(categories)} categories")
-                                for cat_id, cat_data in categories.items():
-                                    st.write(f"• {cat_data.get('categoryName', cat_id)}")
-                            else:
-                                st.warning("Connected but no categories found")
-                        except Exception as e:
-                            st.error(f"❌ Connection failed: {e}")
-            
-            with tab2:
-                show_add_category_page(old_db, new_db)
-            
-            with tab3:
-                show_add_machine_page(old_db, new_db)
-            
-            with tab4:
-                show_edit_machine_page(old_db, new_db)
-            
-            with tab5:
-                show_delete_page(old_db, new_db)
-            
-            with tab6:
-                show_sync_page(old_db, new_db)
-            
-        else:
-            st.error("❌ Failed to load one or both configuration files")
+                if st.button("Test New Database Connection"):
+                    try:
+                        categories = new_db.get_categories()
+                        if categories:
+                            st.success(f"✅ Connected! Found {len(categories)} categories")
+                            for cat_id, cat_data in categories.items():
+                                st.write(f"• {cat_data.get('categoryName', cat_id)}")
+                        else:
+                            st.warning("Connected but no categories found")
+                    except Exception as e:
+                        st.error(f"❌ Connection failed: {e}")
+        
+        with tab2:
+            show_add_category_page(old_db, new_db)
+        
+        with tab3:
+            show_add_machine_page(old_db, new_db)
+        
+        with tab4:
+            show_edit_machine_page(old_db, new_db)
+        
+        with tab5:
+            show_delete_page(old_db, new_db)
+        
+        with tab6:
+            show_sync_page(old_db, new_db)
+        
     else:
-        st.info("👆 Please upload both google-services.json files to continue")
+        st.error("❌ Failed to load Firebase configurations from server")
+        st.info("Please check that the JSON files are accessible at:")
+        st.write("- Old Database: https://asengineeringworks.in/oldjson")
+        st.write("- New Database: https://asengineeringworks.in/new.json")
         
-        st.markdown("""
-        ### 🚀 Database Structure Supported:
-        
-        **📋 Machine Document Structure:**
-        ```
-        categories > {categoryId} > machines > {machineName}  ← Machine name IS the document ID
-        ├── machineImg (string)
-        ├── detail1 (string) - Fixed detail
-        ├── detail2 (string) - Fixed detail  
-        └── detail3 (string) - Fixed detail
-        ```
-        
-        **📝 Additional Details Subcollection:**
-        ```
-        categories > {categoryId} > machines > {machineName} > details > details
-        ├── {customKey1}: {customValue1}
-        ├── {customKey2}: {customValue2}
-        └── {customKeyN}: {customValueN}
-        ```
-        
-        **🖼️ Images Subcollection:**
-        ```
-        categories > {categoryId} > machines > {machineName} > images > images
-        ├── image1: {base64Image}
-        ├── image2: {base64Image}
-        └── imageN: {base64Image}
-        ```
-        
-        ### ✨ Key Features:
-        - **Machine Name as Document ID:** No separate machineId field needed
-        - **Fixed Main Details:** detail1, detail2, detail3 in machine document
-        - **Custom Additional Details:** Key-value pairs in subcollection
-        - **Multiple Images:** Dynamic image storage
-        - **Full CRUD Operations:** Create, Read, Update, Delete
-        - **Sync Between Databases:** Bi-directional synchronization
-        """)
+        # Optional: Add manual refresh button
+        if st.button("🔄 Retry Loading Configurations"):
+            st.rerun()
 
 
 if __name__ == "__main__":
