@@ -1,0 +1,68 @@
+{
+  "project_info": {
+    "project_number": "515086457890",
+    "project_id": "a-s-engineering-works",
+    "storage_bucket": "a-s-engineering-works.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515086457890:android:2790a842080c832ceefe7b",
+        "android_client_info": {
+          "package_name": "com.ASEngineeing.asadmin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515086457890-24oopb77fhg2ffqme6kg5nsf9o11jqo2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVfjhh9PcMBiNWG-zebL3efhMcQyvx_QY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515086457890-24oopb77fhg2ffqme6kg5nsf9o11jqo2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:515086457890:android:733b3829dd46abc7eefe7b",
+        "android_client_info": {
+          "package_name": "com.as.asengineering"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "515086457890-24oopb77fhg2ffqme6kg5nsf9o11jqo2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDVfjhh9PcMBiNWG-zebL3efhMcQyvx_QY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "515086457890-24oopb77fhg2ffqme6kg5nsf9o11jqo2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
