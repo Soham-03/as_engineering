@@ -1053,9 +1053,129 @@ def show_sync_page(old_db, new_db):
                             st.balloons()
 
 
+# def show_delete_page(old_db, new_db):
+#     """Show delete page"""
+#     st.header("🗑️ Delete Machines (Android Style)")
+#     st.info("This follows the exact same deletion pattern as your Android Kotlin code")
+    
+#     # Get categories from old database
+#     categories = old_db.get_categories()
+    
+#     if categories:
+#         # Select category
+#         selected_category = st.selectbox("Select Category", list(categories.keys()), key="delete_category_select")
+        
+#         if selected_category:
+#             # Get machines
+#             machines = old_db.get_machines(selected_category)
+            
+#             if machines:
+#                 st.write(f"Found {len(machines)} machines in '{selected_category}':")
+                
+#                 # Show machines
+#                 for machine_name, machine_data in machines.items():
+#                     with st.expander(f"⚙️ {machine_name}"):
+#                         st.write(f"**Name:** {machine_name}")
+#                         st.write(f"**Detail 1:** {machine_data.get('detail1', 'Not set')}")
+#                         st.write(f"**Detail 2:** {machine_data.get('detail2', 'Not set')}")
+                        
+#                         # Create unique keys for each machine
+#                         delete_key = f"delete_{selected_category}_{machine_name}"
+#                         confirm_key = f"confirm_{selected_category}_{machine_name}"
+                        
+#                         if st.button(f"🗑️ Delete {machine_name}", key=delete_key):
+#                             st.session_state[confirm_key] = True
+                        
+#                         # Show confirmation if delete was clicked
+#                         if st.session_state.get(confirm_key, False):
+#                             st.warning(f"⚠️ Are you sure you want to delete '{machine_name}'?")
+                            
+#                             col1, col2 = st.columns(2)
+#                             with col1:
+#                                 if st.button(f"✅ YES, DELETE", key=f"yes_{confirm_key}"):
+#                                     st.write("🚀 Starting Android-style deletion process...")
+                                    
+#                                     # Delete from both databases using Android method
+#                                     col1, col2 = st.columns(2)
+                                    
+#                                     with col1:
+#                                         st.write("**🗃️ Old Database:**")
+#                                         success_old = old_db.delete_machine_like_android(selected_category, machine_name)
+                                    
+#                                     with col2:
+#                                         st.write("**🆕 New Database:**")
+#                                         success_new = new_db.delete_machine_like_android(selected_category, machine_name)
+                                    
+#                                     # Results
+#                                     if success_old and success_new:
+#                                         st.success("✅ Machine deleted from both databases!")
+#                                         st.balloons()
+#                                         # Clear the confirmation state
+#                                         if confirm_key in st.session_state:
+#                                             del st.session_state[confirm_key]
+#                                         time.sleep(1)
+#                                         st.rerun()
+#                                     elif success_old or success_new:
+#                                         st.warning("⚠️ Partial success")
+#                                         if success_old:
+#                                             st.info("✅ Deleted from Old Database")
+#                                         if success_new:
+#                                             st.info("✅ Deleted from New Database")
+#                                     else:
+#                                         st.error("❌ Failed to delete from both databases")
+                                    
+#                                     # Clear confirmation state after processing
+#                                     if confirm_key in st.session_state:
+#                                         del st.session_state[confirm_key]
+                            
+#                             with col2:
+#                                 if st.button(f"❌ CANCEL", key=f"no_{confirm_key}"):
+#                                     # Clear the confirmation state
+#                                     if confirm_key in st.session_state:
+#                                         del st.session_state[confirm_key]
+#                                     st.rerun()
+#             else:
+#                 st.info("No machines found in this category")
+#     else:
+#         st.warning("No categories found. Please check your database connection.")
+    
+#     st.markdown("---")
+    
+#     # Bulk delete option
+#     st.header("🔄 Bulk Delete All Machines in Category")
+#     st.warning("This will delete ALL machines in the selected category from both databases!")
+    
+#     if categories and 'selected_category' in locals() and selected_category:
+#         machines = old_db.get_machines(selected_category)
+        
+#         if machines and st.checkbox(f"I want to delete ALL {len(machines)} machines from '{selected_category}'"):
+#             if st.button("🚨 DELETE ALL MACHINES IN CATEGORY"):
+#                 if st.button("🚨 FINAL CONFIRMATION - DELETE ALL"):
+#                     st.write(f"💥 Deleting all machines from category '{selected_category}'...")
+                    
+#                     total_machines = len(machines)
+#                     success_count = 0
+                    
+#                     for i, (machine_name, machine_data) in enumerate(machines.items(), 1):
+#                         st.write(f"🔄 Processing {i}/{total_machines}: {machine_name}")
+                        
+#                         # Delete from both databases
+#                         success_old = old_db.delete_machine_like_android(selected_category, machine_name)
+#                         success_new = new_db.delete_machine_like_android(selected_category, machine_name)
+                        
+#                         if success_old and success_new:
+#                             success_count += 1
+#                             st.write(f"   ✅ Successfully deleted from both databases")
+#                         else:
+#                             st.write(f"   ❌ Failed to delete from one or both databases")
+                    
+#                     st.success(f"✅ Bulk deletion completed! {success_count}/{total_machines} machines deleted successfully.")
+#                     if success_count == total_machines:
+#                         st.balloons()
+
 def show_delete_page(old_db, new_db):
-    """Show delete page"""
-    st.header("🗑️ Delete Machines (Android Style)")
+    """Show delete page with category deletion option"""
+    st.header("🗑️ Delete Machines (Android Style) & Categories")
     st.info("This follows the exact same deletion pattern as your Android Kotlin code")
     
     # Get categories from old database
@@ -1066,10 +1186,68 @@ def show_delete_page(old_db, new_db):
         selected_category = st.selectbox("Select Category", list(categories.keys()), key="delete_category_select")
         
         if selected_category:
+            # ====== NEW: COMPLETE CATEGORY DELETION OPTION ======
+            st.markdown("---")
+            st.header("🚨 DELETE COMPLETE CATEGORY")
+            st.error(f"⚠️ DANGER ZONE: This will DELETE THE ENTIRE CATEGORY '{selected_category}' including ALL machines and subcollections!")
+            
+            # Show category info
+            category_data = categories[selected_category]
+            machines = old_db.get_machines(selected_category)
+            
+            with st.expander("📋 Category Information"):
+                st.write(f"**Category ID:** {selected_category}")
+                st.write(f"**Category Name:** {category_data.get('categoryName', 'N/A')}")
+                st.write(f"**Total Machines:** {len(machines) if machines else 0}")
+                if machines:
+                    st.write("**Machines to be deleted:**")
+                    for machine_name in machines.keys():
+                        st.write(f"  • {machine_name}")
+            
+            # Confirmation checkbox
+            confirm_category_delete = st.checkbox(
+                f"I understand this will PERMANENTLY DELETE the entire '{selected_category}' category and ALL its data",
+                key="confirm_category_delete"
+            )
+            
+            if confirm_category_delete:
+                if st.button(f"🗑️ DELETE COMPLETE CATEGORY '{selected_category}'", key="delete_complete_category_btn"):
+                    st.write(f"🚀 Starting complete deletion of category '{selected_category}'...")
+                    
+                    # Delete category from both databases
+                    col1, col2 = st.columns(2)
+                    
+                    with col1:
+                        st.write("**🗃️ Old Database:**")
+                        success_old = old_db.delete_document_simple(f"categories/{selected_category}")
+                    
+                    with col2:
+                        st.write("**🆕 New Database:**")
+                        success_new = new_db.delete_document_simple(f"categories/{selected_category}")
+                    
+                    # Results
+                    if success_old and success_new:
+                        st.success("✅ Category deleted from both databases!")
+                        st.balloons()
+                        time.sleep(1)
+                        st.rerun()
+                    elif success_old or success_new:
+                        st.warning("⚠️ Partial success deleting category")
+                        if success_old:
+                            st.info("✅ Deleted category from Old Database")
+                        if success_new:
+                            st.info("✅ Deleted category from New Database")
+                    else:
+                        st.error("❌ Failed to delete category from both databases")
+            
+            st.markdown("---")
+            
+            # ====== EXISTING: INDIVIDUAL MACHINE DELETION ======
             # Get machines
             machines = old_db.get_machines(selected_category)
             
             if machines:
+                st.header("🔧 Delete Individual Machines")
                 st.write(f"Found {len(machines)} machines in '{selected_category}':")
                 
                 # Show machines
@@ -1141,7 +1319,7 @@ def show_delete_page(old_db, new_db):
     
     st.markdown("---")
     
-    # Bulk delete option
+    # Bulk delete option for machines only
     st.header("🔄 Bulk Delete All Machines in Category")
     st.warning("This will delete ALL machines in the selected category from both databases!")
     
@@ -1150,7 +1328,7 @@ def show_delete_page(old_db, new_db):
         
         if machines and st.checkbox(f"I want to delete ALL {len(machines)} machines from '{selected_category}'"):
             if st.button("🚨 DELETE ALL MACHINES IN CATEGORY"):
-                if st.button("🚨 FINAL CONFIRMATION - DELETE ALL"):
+                if st.button("🚨 FINAL CONFIRMATION - DELETE ALL MACHINES"):
                     st.write(f"💥 Deleting all machines from category '{selected_category}'...")
                     
                     total_machines = len(machines)
@@ -1172,6 +1350,7 @@ def show_delete_page(old_db, new_db):
                     st.success(f"✅ Bulk deletion completed! {success_count}/{total_machines} machines deleted successfully.")
                     if success_count == total_machines:
                         st.balloons()
+
 
 
 def main():

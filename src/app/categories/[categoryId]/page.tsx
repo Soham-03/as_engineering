@@ -28,6 +28,7 @@ export default function CategoryMachinesPage() {
           id: doc.id,
           ...doc.data()
         })) as Machine[];
+        console.log('Fetched machines:', machinesData);
         setMachines(machinesData);
       } catch (error) {
         console.error('Error fetching machines:', error);

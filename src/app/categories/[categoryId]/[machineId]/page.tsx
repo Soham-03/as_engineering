@@ -45,7 +45,8 @@ export default function MachineDetailsPage() {
        const imagesDoc = await getDoc(imagesRef);
 
        if (machineDoc.exists()) {
-         setMachine({ id: machineDoc.id, ...machineDoc.data() } as Machine);
+        console.log('Fetched machine:', { id: machineDoc.id, ...machineDoc.data() });
+        setMachine({ id: machineDoc.id, ...machineDoc.data() } as Machine);
        }
        
        if (detailsDoc.exists()) {
