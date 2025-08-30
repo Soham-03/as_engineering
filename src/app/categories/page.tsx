@@ -21,7 +21,7 @@ export default function CategoriesPage() {
         const categoriesCollection = collection(db, 'categories');
         const snapshot = await getDocs(categoriesCollection);
         const categoriesData = snapshot.docs.map(doc => ({
-          id: doc.id,
+          id: doc.id.toString(),
           ...doc.data()
         })) as Category[];
         setCategories(categoriesData);
